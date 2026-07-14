@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tips & Activities — Los Carmenes, La Cala del Moral</title>
+<meta name="description" content="Restaurants, beaches, activities and practical tips around Los Carmenes in La Cala del Moral, near Málaga, with an interactive map.">
+<link rel="canonical" href="https://zwenn.es/tips.html">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Los Carmenes">
+<meta property="og:title" content="Tips & Activities — Los Carmenes, La Cala del Moral">
+<meta property="og:description" content="Restaurants, beaches, activities and practical tips around Los Carmenes.">
+<meta property="og:image" content="https://zwenn.es/hero.jpg">
+<meta property="og:url" content="https://zwenn.es/tips.html">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+<style>
+:root {
+  --green-dark: #1B4332;
+  --green-mid: #2D6A4F;
+  --gold: #C9943C;
+  --sand: #FAF6F0;
+  --text: #1C2B23;
+  --text-muted: #6B7E75;
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.07);
+  --t: all 0.3s ease;
+}
+* { box-sizing: border-box; }
+body { margin:0; font-family:'Nunito',sans-serif; color:var(--text); background:#fafafa; }
+
+/* ── Header ── */
+#site-header {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 1000;
+  background: var(--green-dark);
+  padding: 1.2rem 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  transition: var(--t);
+}
+#site-header.scrolled {
+  background: white;
+  box-shadow: var(--shadow-sm);
+  padding: 0.75rem 2.5rem;
+}
+.logo {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: white;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  transition: var(--t);
+  text-decoration: none;
+}
+#site-header.scrolled .logo { color: var(--green-dark); }
+.header-right { display: flex; align-items: center; gap: 1rem; }
+.back-link {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.75);
+  transition: var(--t);
+  text-decoration: none;
+}
+.back-link:hover { color: white; }
+#site-header.scrolled .back-link { color: var(--text-muted); }
+#site-header.scrolled .back-link:hover { color: var(--green-dark); }
+.lang-switcher { display: flex; gap: 0.3rem; }
+.lang-btn {
+  padding: 0.3rem 0.6rem;
+  border: 1.5px solid rgba(255,255,255,0.4);
+  background: transparent;
+  color: white;
+  border-radius: 4px;
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: var(--t);
+  letter-spacing: 0.05em;
+}
+.lang-btn:hover, .lang-btn.active { background: rgba(255,255,255,0.15); border-color: white; }
+#site-header.scrolled .lang-btn { border-color: var(--green-dark); color: var(--green-dark); }
+#site-header.scrolled .lang-btn:hover,
+#site-header.scrolled .lang-btn.active { background: var(--green-dark); color: white; }
+
+/* ── Layout ── */
+.container {
+  display:flex; flex-direction:row;
+  height: calc(100vh - 68px);
+  margin-top: 68px;
+}
+.sidebar {
+  width:300px; min-width:220px;
+  overflow-y:auto; padding:0.8rem 1rem;
+  background:white;
+  border-right:1px solid #ddd;
+  display:flex; flex-direction:column; gap:0.5rem;
+}
+.sidebar h2 { margin:0 0 0.5rem; font-size:1.1rem; color:var(--green-mid); }
+#map { flex:1; }
+
+/* ── Placeholder note ── */
+.placeholder-note {
+  padding:0.6rem 0.8rem;
+  background:#fff8e6;
+  border:1px solid #f0d9a0;
+  border-radius:6px;
+  font-size:0.78rem;
+  color:#8a6d1f;
+  margin-bottom:0.6rem;
+}
+
+/* ── Legend ── */
+.legend {
+  margin-bottom:0.8rem;
+  padding:0.6rem 0.8rem;
+  background:#f0f8f0;
+  border-radius:6px;
+  border:1px solid #c8e6c9;
+  font-size:0.82rem;
+}
+.legend-title { font-weight:bold; margin-bottom:0.4rem; color:var(--green-mid); font-size:0.85rem; }
+.legend-item {
+  display:flex; align-items:center; gap:0.4rem; margin:0.2rem 0; cursor:pointer;
+  padding:0.15rem 0.3rem; border-radius:3px; transition:background 0.15s;
+}
+.legend-item:hover { background:rgba(46,139,87,0.1); }
+.legend-dot {
+  width:12px; height:12px; border-radius:50%; flex-shrink:0;
+  border:1px solid rgba(0,0,0,0.2);
+}
+
+/* ── POI list ── */
+.category-block { margin-bottom:0.6rem; }
+.category-heading {
+  font-weight:bold; font-size:0.8rem; text-transform:uppercase;
+  letter-spacing:0.05em; color:#888; margin:0.6rem 0 0.3rem;
+  padding-bottom:0.2rem; border-bottom:1px solid #eee;
+}
+ul { list-style:none; margin:0; padding:0; }
+li.poi-item {
+  cursor:pointer; padding:0.35rem 0.5rem;
+  border-radius:5px; font-size:0.9rem;
+  display:flex; align-items:center; gap:0.5rem;
+  transition:background 0.15s;
+}
+li.poi-item:hover { background:#e8f5e9; }
+li.poi-item.active { background:#c8e6c9; font-weight:bold; }
+.poi-dot {
+  width:9px; height:9px; border-radius:50%; flex-shrink:0;
+  border:1px solid rgba(0,0,0,0.2);
+}
+
+/* ── No results ── */
+.no-data {
+  padding:1rem; color:#999; font-size:0.9rem; text-align:center;
+}
+
+/* ── Responsive ── */
+@media(max-width:768px){
+  .container { flex-direction:column; height:auto; }
+  .sidebar { width:100%; height:auto; max-height:45vh; border-right:none; border-bottom:1px solid #ddd; }
+  #map { height:55vw; min-height:300px; }
+}
+
+/* ── Footer ── */
+footer { background: var(--green-dark); color:rgba(255,255,255,0.55); text-align:center; padding:2rem; font-size:0.78rem; font-family:'Nunito',sans-serif; }
+footer a { color:rgba(255,255,255,0.75); }
+.footer-brand { font-family:'Playfair Display',serif; color:white; font-size:1.2rem; margin-bottom:0.3rem; }
+
+.hidden { display:none; }
+</style>
+</head>
+<body>
+
+<header id="site-header">
+  <a href="index.html" class="logo">Los Carmenes</a>
+  <div class="header-right">
+    <a href="index.html" class="back-link" id="back-link">← <span id="back-label">Home</span></a>
+    <div class="lang-switcher">
+      <button class="lang-btn" id="btn-es" onclick="showLang('es')">ES</button>
+      <button class="lang-btn" id="btn-en" onclick="showLang('en')">EN</button>
+      <button class="lang-btn" id="btn-nl" onclick="showLang('nl')">NL</button>
+      <button class="lang-btn" id="btn-ca" onclick="showLang('ca')">CA</button>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+  <div class="sidebar">
+
+    <div class="placeholder-note" id="placeholder-note">Example data — will be replaced with real locations.</div>
+
+    <!-- Legend -->
+    <div class="legend" id="map-legend">
+      <div class="legend-title" id="legend-title">Map legend</div>
+      <!-- filled by JS -->
+    </div>
+
+    <h2 id="sidebar-title">Locations</h2>
+
+    <!-- POI lists per language -->
+    <div id="tips-list-es" class="lang-tips hidden"></div>
+    <div id="tips-list-en" class="lang-tips"></div>
+    <div id="tips-list-nl" class="lang-tips hidden"></div>
+    <div id="tips-list-ca" class="lang-tips hidden"></div>
+
+  </div>
+  <div id="map"></div>
+</div>
+
+<footer>
+  <div class="footer-brand">Los Carmenes</div>
+  <div>&copy; 2026 Los Carmenes, La Cala del Moral &nbsp;|&nbsp; <a href="index.html">← Home</a> &nbsp;|&nbsp; <a href="gallery.html">Gallery</a></div>
+</footer>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+// ── Leaflet + OpenStreetMap ───────────────────────────────────────
+const map = L.map('map').setView([36.714516, -4.300670], 15);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+  maxZoom: 19
+}).addTo(map);
+map.markers = [];
+
+const SUPPORTED_LANGS = ['es', 'en', 'nl', 'ca'];
+let currentLang = 'en';
+let allFeatures = [];
+
+function detectLang() {
+  const candidates = (navigator.languages && navigator.languages.length) ? navigator.languages : [navigator.language || 'en'];
+  for (const l of candidates) {
+    const prefix = l.toLowerCase().split('-')[0];
+    if (SUPPORTED_LANGS.includes(prefix)) return prefix;
+  }
+  return 'en';
+}
+
+// ── Category translations ─────────────────────────────────────────
+const CAT_LABELS = {
+  nature:     { es:'Naturaleza y Playas',   en:'Nature & Beaches',    nl:'Natuur & Stranden',    ca:'Natura i Platges' },
+  restaurant: { es:'Restaurantes y Bares',  en:'Food & Drink',        nl:'Eten & Drinken',       ca:'Restaurants i Bars' },
+  activity:   { es:'Actividades',           en:'Activities',          nl:'Activiteiten',         ca:'Activitats' },
+  shop:       { es:'Tiendas',               en:'Shops',               nl:'Winkels',              ca:'Botigues' },
+  practical:  { es:'Práctico',              en:'Practical',           nl:'Praktisch',            ca:'Pràctic' },
+  stay:       { es:'Alojamiento',           en:'Stay',                nl:'Verblijf',             ca:'Allotjament' },
+  culture:    { es:'Cultura',               en:'Culture',             nl:'Cultuur',              ca:'Cultura' },
+  poi:        { es:'Otros',                 en:'Other',               nl:'Overig',               ca:'Altres' },
+};
+
+// ── UI string translations ────────────────────────────────────────
+const UI = {
+  es: { sidebarTitle:'Ubicaciones', legendTitle:'Leyenda del mapa', homeLink:'← Inicio', noData:'No se encontraron ubicaciones.', note:'Datos de ejemplo — se sustituirán por ubicaciones reales.' },
+  en: { sidebarTitle:'Locations', legendTitle:'Map legend', homeLink:'← Home', noData:'No locations found.', note:'Example data — will be replaced with real locations.' },
+  nl: { sidebarTitle:'Locaties', legendTitle:'Kaart legenda', homeLink:'← Home', noData:'Geen locaties gevonden.', note:'Voorbeelddata — wordt vervangen door echte locaties.' },
+  ca: { sidebarTitle:'Ubicacions', legendTitle:'Llegenda del mapa', homeLink:'← Inici', noData:'No s\'han trobat ubicacions.', note:'Dades d\'exemple — se substituiran per ubicacions reals.' },
+};
+
+function groupBy(array, keyFn) {
+  return array.reduce((acc, item) => {
+    const k = keyFn(item); if (!acc[k]) acc[k] = []; acc[k].push(item); return acc;
+  }, {});
+}
+
+// ── Load POIs from tips.json (placeholder data for now) ───────────
+async function loadTips() {
+  try {
+    const resp = await fetch('tips.json');
+    if (!resp.ok) throw new Error('HTTP ' + resp.status);
+    allFeatures = (await resp.json()).map((f, i) => ({ ...f, uri: `poi-${i}` }));
+    renderAll();
+  } catch(e) {
+    console.error('Failed to load tips.json', e);
+    SUPPORTED_LANGS.forEach(l => {
+      const el = document.getElementById(`tips-list-${l}`);
+      if (el) el.innerHTML = `<div class="no-data">${UI[l].noData}</div>`;
+    });
+  }
+}
+
+function renderAll() {
+  renderMarkers();
+  renderLegend();
+  renderLists();
+}
+
+function renderMarkers() {
+  map.markers.forEach(m => m.remove());
+  map.markers = [];
+
+  allFeatures.forEach(f => {
+    const icon = L.divIcon({
+      html: `<div style="width:28px;height:28px;border-radius:50%;background:${f.color};border:2px solid white;box-shadow:0 2px 6px rgba(0,0,0,0.3);display:flex;align-items:center;justify-content:center;font-size:14px;cursor:pointer;">${f.icon}</div>`,
+      className: '',
+      iconSize: [28, 28],
+      iconAnchor: [14, 14],
+      popupAnchor: [0, -16]
+    });
+
+    const marker = L.marker([f.lat, f.lng], { icon })
+      .bindPopup(buildPopupHtml(f), { maxWidth: 240 })
+      .addTo(map);
+    marker._featureUri = f.uri;
+    map.markers.push(marker);
+  });
+}
+
+function buildPopupHtml(f) {
+  const catLabel = CAT_LABELS[f.cat] ? CAT_LABELS[f.cat][currentLang] : f.cat;
+  return `<div style="font-family:Arial,sans-serif; font-size:13px; max-width:200px;">
+    <strong style="font-size:14px;">${f.icon} ${f.label}</strong>
+    <div style="color:#888; font-size:11px; margin-top:2px;">${catLabel}</div>
+  </div>`;
+}
+
+function renderLegend() {
+  const t = UI[currentLang];
+  document.getElementById('legend-title').textContent = t.legendTitle;
+
+  const usedCats = [...new Set(allFeatures.map(f => f.cat))];
+  const catColors = {}, catIcons = {};
+  allFeatures.forEach(f => { catColors[f.cat] = f.color; catIcons[f.cat] = f.icon; });
+
+  const legend = document.getElementById('map-legend');
+  legend.querySelectorAll('.legend-item').forEach(el => el.remove());
+
+  usedCats.forEach(cat => {
+    const label = CAT_LABELS[cat] ? CAT_LABELS[cat][currentLang] : cat;
+    const item = document.createElement('div');
+    item.className = 'legend-item';
+    item.innerHTML = `<div class="legend-dot" style="background:${catColors[cat]};"></div><span>${catIcons[cat]} ${label}</span>`;
+    item.addEventListener('click', () => filterByCategory(cat));
+    legend.appendChild(item);
+  });
+}
+
+let activeFilter = null;
+function filterByCategory(cat) {
+  activeFilter = (activeFilter === cat) ? null : cat;
+  document.querySelectorAll('.legend-item').forEach(el => { el.style.fontWeight = ''; el.style.background = ''; });
+  if (activeFilter) {
+    document.querySelectorAll('.legend-item').forEach(el => {
+      if (el.textContent.trim().includes(CAT_LABELS[cat][currentLang])) {
+        el.style.fontWeight = 'bold';
+        el.style.background = 'rgba(46,139,87,0.15)';
+      }
+    });
+  }
+  renderLists();
+  map.markers.forEach(marker => {
+    const f = allFeatures.find(f => f.uri === marker._featureUri);
+    if (f) {
+      const visible = !activeFilter || f.cat === activeFilter;
+      marker.getElement().style.opacity = visible ? '1' : '0.15';
+    }
+  });
+}
+
+function renderLists() {
+  SUPPORTED_LANGS.forEach(lang => {
+    const t = UI[lang];
+    const container = document.getElementById(`tips-list-${lang}`);
+    container.innerHTML = '';
+
+    const features = activeFilter ? allFeatures.filter(f => f.cat === activeFilter) : allFeatures;
+    if (!features.length) {
+      container.innerHTML = `<div class="no-data">${t.noData}</div>`;
+      return;
+    }
+
+    const grouped = groupBy(features, f => f.cat);
+    const catOrder = ['nature', 'restaurant', 'activity', 'culture', 'shop', 'stay', 'practical', 'poi'];
+    const orderedCats = catOrder.filter(c => grouped[c]).concat(Object.keys(grouped).filter(c => !catOrder.includes(c)));
+
+    orderedCats.forEach(cat => {
+      const catLabel = CAT_LABELS[cat] ? CAT_LABELS[cat][lang] : cat;
+      const block = document.createElement('div');
+      block.className = 'category-block';
+
+      const h = document.createElement('div');
+      h.className = 'category-heading';
+      h.textContent = catLabel;
+      block.appendChild(h);
+
+      const ul = document.createElement('ul');
+      grouped[cat].forEach(f => {
+        const li = document.createElement('li');
+        li.className = 'poi-item';
+        li.dataset.uri = f.uri;
+        li.innerHTML = `<span class="poi-dot" style="background:${f.color};"></span>${f.icon} ${f.label}`;
+        li.addEventListener('click', () => {
+          map.flyTo([f.lat, f.lng], 16);
+          map.markers.forEach(m => {
+            if (m._featureUri === f.uri) { if (m.isPopupOpen()) m.closePopup(); else m.openPopup(); }
+          });
+          document.querySelectorAll('.poi-item').forEach(el => el.classList.remove('active'));
+          li.classList.add('active');
+          if (window.innerWidth <= 768) document.getElementById('map').scrollIntoView({ behavior:'smooth' });
+        });
+        ul.appendChild(li);
+      });
+      block.appendChild(ul);
+      container.appendChild(block);
+    });
+  });
+}
+
+// ── Language switching ────────────────────────────────────────────
+function showLang(lang) {
+  currentLang = lang;
+  document.documentElement.lang = lang;
+  const t = UI[lang];
+
+  document.getElementById('sidebar-title').textContent = t.sidebarTitle;
+  document.getElementById('back-label').textContent = t.homeLink;
+  document.getElementById('placeholder-note').textContent = t.note;
+
+  SUPPORTED_LANGS.forEach(l => document.getElementById(`btn-${l}`).classList.toggle('active', l === lang));
+
+  document.querySelectorAll('.lang-tips').forEach(el => el.classList.add('hidden'));
+  document.getElementById(`tips-list-${lang}`).classList.remove('hidden');
+
+  if (allFeatures.length) {
+    renderLegend();
+    renderLists();
+    map.markers.forEach(marker => {
+      const f = allFeatures.find(f => f.uri === marker._featureUri);
+      if (f) marker.getPopup().setContent(buildPopupHtml(f));
+    });
+  }
+}
+
+// ── Init ──────────────────────────────────────────────────────────
+loadTips();
+showLang(detectLang());
+
+window.addEventListener('scroll', () => {
+  document.getElementById('site-header').classList.toggle('scrolled', window.scrollY > 60);
+});
+</script>
+</body>
+</html>

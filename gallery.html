@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Los Carmenes — Gallery</title>
+<meta name="description" content="Photos of Los Carmenes: the apartment, sea views, the beach and the surroundings of La Cala del Moral, near Málaga.">
+<link rel="canonical" href="https://zwenn.es/gallery.html">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Los Carmenes">
+<meta property="og:title" content="Los Carmenes — Gallery">
+<meta property="og:description" content="Photos of the apartment, sea views, the beach and the surroundings of La Cala del Moral.">
+<meta property="og:image" content="https://zwenn.es/hero.jpg">
+<meta property="og:url" content="https://zwenn.es/gallery.html">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --green-dark: #1B4332;
+  --green-mid: #2D6A4F;
+  --green-light: #52B788;
+  --gold: #C9943C;
+  --sand: #FAF6F0;
+  --text: #1C2B23;
+  --text-muted: #6B7E75;
+  --white: #FFFFFF;
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.07);
+  --shadow: 0 4px 20px rgba(0,0,0,0.1);
+  --radius: 12px;
+  --t: all 0.3s ease;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { font-family: 'Nunito', sans-serif; color: var(--text); background: var(--sand); line-height: 1.7; }
+a { text-decoration: none; color: inherit; }
+img { max-width: 100%; display: block; }
+
+/* ======= HEADER ======= */
+#site-header {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 1000;
+  background: var(--green-dark);
+  padding: 1.2rem 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  transition: var(--t);
+}
+#site-header.scrolled {
+  background: white;
+  box-shadow: var(--shadow-sm);
+  padding: 0.75rem 2.5rem;
+}
+.logo {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: white;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  transition: var(--t);
+}
+.logo a { color: inherit; }
+#site-header.scrolled .logo { color: var(--green-dark); }
+.header-right { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+.back-link {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.75);
+  transition: var(--t);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.back-link:hover { color: white; }
+#site-header.scrolled .back-link { color: var(--text-muted); }
+#site-header.scrolled .back-link:hover { color: var(--green-dark); }
+.lang-switcher { display: flex; gap: 0.3rem; }
+.lang-btn {
+  padding: 0.3rem 0.6rem;
+  border: 1.5px solid rgba(255,255,255,0.4);
+  background: transparent;
+  color: white;
+  border-radius: 4px;
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: var(--t);
+  letter-spacing: 0.05em;
+}
+.lang-btn:hover, .lang-btn.active { background: rgba(255,255,255,0.15); border-color: white; }
+#site-header.scrolled .lang-btn { border-color: var(--green-dark); color: var(--green-dark); }
+#site-header.scrolled .lang-btn:hover, #site-header.scrolled .lang-btn.active { background: var(--green-dark); color: white; }
+
+/* ======= PAGE TITLE ======= */
+.page-header {
+  background: var(--green-dark);
+  padding: calc(3rem + 68px) 2.5rem 4rem;
+  text-align: center;
+  color: white;
+}
+.page-header .eyebrow {
+  font-size: 0.7rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--gold);
+  font-weight: 700;
+  margin-bottom: 0.6rem;
+}
+.page-header h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+/* ======= GALLERY ======= */
+.gallery-container {
+  max-width: 1200px;
+  margin: -1.5rem auto 0;
+  padding: 0 1.5rem 4rem;
+  position: relative;
+  z-index: 1;
+}
+.category-section {
+  background: white;
+  border-radius: var(--radius);
+  padding: 2rem 2rem 2.5rem;
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow-sm);
+}
+.category-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem;
+  color: var(--green-dark);
+  margin-bottom: 1.2rem;
+  padding-bottom: 0.8rem;
+  border-bottom: 2px solid var(--sand);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.photo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 0.75rem;
+}
+.photo-item {
+  aspect-ratio: 4/3;
+  overflow: hidden;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.photo-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+  display: block;
+}
+.photo-item:hover img { transform: scale(1.08); }
+
+/* ======= LIGHTBOX ======= */
+.lightbox {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.92);
+  z-index: 2000;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+.lightbox.open { display: flex; }
+.lightbox img {
+  max-width: 90vw;
+  max-height: 90vh;
+  object-fit: contain;
+  border-radius: 6px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+}
+.lightbox-close {
+  position: absolute;
+  top: 1.2rem;
+  right: 1.5rem;
+  color: white;
+  font-size: 2rem;
+  cursor: pointer;
+  opacity: 0.8;
+  transition: opacity 0.2s;
+  line-height: 1;
+  background: none;
+  border: none;
+}
+.lightbox-close:hover { opacity: 1; }
+.lightbox-prev,
+.lightbox-next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  color: white;
+  font-size: 2.5rem;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+  background: none;
+  border: none;
+  padding: 1rem;
+  line-height: 1;
+}
+.lightbox-prev:hover, .lightbox-next:hover { opacity: 1; }
+.lightbox-prev { left: 1rem; }
+.lightbox-next { right: 1rem; }
+
+/* ======= FOOTER ======= */
+footer {
+  background: var(--green-dark);
+  color: rgba(255,255,255,0.55);
+  text-align: center;
+  padding: 2.5rem 2rem;
+}
+.footer-brand {
+  font-family: 'Playfair Display', serif;
+  color: white;
+  font-size: 1.3rem;
+  margin-bottom: 0.4rem;
+}
+.footer-copy { font-size: 0.78rem; }
+
+/* ======= RESPONSIVE ======= */
+@media (max-width: 600px) {
+  header { padding: 1rem 1.2rem; }
+  .page-header { padding: 2rem 1.2rem 3rem; }
+  .gallery-container { padding: 0 1rem 3rem; }
+  .category-section { padding: 1.5rem 1rem 2rem; }
+  .photo-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
+}
+</style>
+</head>
+<body>
+
+<header id="site-header">
+  <div class="logo"><a href="index.html">Los Carmenes</a></div>
+  <div class="header-right">
+    <a href="index.html" class="back-link">← <span id="back-label">Back</span></a>
+    <div class="lang-switcher">
+      <button class="lang-btn" id="btn-es" onclick="showLang('es')">ES</button>
+      <button class="lang-btn" id="btn-en" onclick="showLang('en')">EN</button>
+      <button class="lang-btn" id="btn-nl" onclick="showLang('nl')">NL</button>
+      <button class="lang-btn" id="btn-ca" onclick="showLang('ca')">CA</button>
+    </div>
+  </div>
+</header>
+
+<div class="page-header">
+  <p class="eyebrow">Los Carmenes, La Cala del Moral</p>
+  <h1 id="page-title">Gallery</h1>
+</div>
+
+<div class="gallery-container" id="gallery-container"></div>
+
+<footer>
+  <div class="footer-brand">Los Carmenes</div>
+  <div class="footer-copy">&copy; 2026 Los Carmenes, La Cala del Moral</div>
+</footer>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
+  <button class="lightbox-close" onclick="closeLightbox()">&times;</button>
+  <button class="lightbox-prev" onclick="lightboxNav(-1, event)">&#8249;</button>
+  <img id="lightbox-img" src="" alt="">
+  <button class="lightbox-next" onclick="lightboxNav(1, event)">&#8250;</button>
+</div>
+
+<script>
+const categoryIcons = {
+  interior: '🏡',
+  beach: '🏖️',
+  nearby: '📍'
+};
+
+const titles = {
+  es: {
+    page: 'Galería', back: 'Volver',
+    interior: 'Interior', beach: 'Playa y Mar', nearby: 'Alrededores y Actividades'
+  },
+  en: {
+    page: 'Gallery', back: 'Back',
+    interior: 'Interior', beach: 'Beach & Sea', nearby: 'Surroundings & Activities'
+  },
+  nl: {
+    page: 'Galerij', back: 'Terug',
+    interior: 'Interieur', beach: 'Strand & Zee', nearby: 'Omgeving & Activiteiten'
+  },
+  ca: {
+    page: 'Galeria', back: 'Enrere',
+    interior: 'Interior', beach: 'Platja i Mar', nearby: 'Voltants i Activitats'
+  }
+};
+
+const SUPPORTED_LANGS = ['es', 'en', 'nl', 'ca'];
+function detectLang() {
+  const candidates = (navigator.languages && navigator.languages.length) ? navigator.languages : [navigator.language || 'en'];
+  for (const l of candidates) {
+    const prefix = l.toLowerCase().split('-')[0];
+    if (SUPPORTED_LANGS.includes(prefix)) return prefix;
+  }
+  return 'en';
+}
+
+let currentLang = 'en';
+let galleryJson = {};
+let allImages = [];
+let currentIndex = 0;
+
+async function loadGalleryJson() {
+  try {
+    const resp = await fetch('gallery/images.json');
+    galleryJson = await resp.json();
+    renderGallery();
+  } catch(e) {
+    console.error('Failed to load images.json', e);
+  }
+}
+
+function renderGallery() {
+  const container = document.getElementById('gallery-container');
+  container.innerHTML = '';
+  allImages = [];
+  const t = titles[currentLang];
+  document.getElementById('page-title').textContent = t.page;
+  document.getElementById('back-label').textContent = t.back;
+
+  const order = ['interior', 'beach', 'nearby'];
+  const cats = order.filter(c => galleryJson[c]).concat(Object.keys(galleryJson).filter(c => !order.includes(c)));
+
+  cats.forEach(category => {
+    const imgs = galleryJson[category];
+    const section = document.createElement('div');
+    section.className = 'category-section';
+    const h2 = document.createElement('h2');
+    h2.className = 'category-title';
+    const icon = categoryIcons[category] || '📷';
+    h2.innerHTML = `${icon} ${t[category] || category}`;
+    section.appendChild(h2);
+    const grid = document.createElement('div');
+    grid.className = 'photo-grid';
+
+    imgs.forEach(imgPath => {
+      const startIndex = allImages.length;
+      allImages.push(imgPath);
+      const item = document.createElement('div');
+      item.className = 'photo-item';
+      const img = document.createElement('img');
+      img.src = imgPath;
+      img.loading = 'lazy';
+      img.onclick = () => openLightbox(startIndex);
+      item.appendChild(img);
+      grid.appendChild(item);
+    });
+
+    section.appendChild(grid);
+    container.appendChild(section);
+  });
+}
+
+function openLightbox(index) {
+  currentIndex = index;
+  document.getElementById('lightbox-img').src = allImages[currentIndex];
+  document.getElementById('lightbox').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeLightbox(e) {
+  if (e && (e.target.tagName === 'IMG' || e.target.tagName === 'BUTTON')) return;
+  document.getElementById('lightbox').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function lightboxNav(dir, e) {
+  if (e) e.stopPropagation();
+  currentIndex = (currentIndex + dir + allImages.length) % allImages.length;
+  document.getElementById('lightbox-img').src = allImages[currentIndex];
+}
+
+document.addEventListener('keydown', e => {
+  const lb = document.getElementById('lightbox');
+  if (!lb.classList.contains('open')) return;
+  if (e.key === 'Escape') closeLightbox();
+  if (e.key === 'ArrowLeft') lightboxNav(-1);
+  if (e.key === 'ArrowRight') lightboxNav(1);
+});
+
+function showLang(lang) {
+  currentLang = lang;
+  document.documentElement.lang = lang;
+  SUPPORTED_LANGS.forEach(l => document.getElementById(`btn-${l}`).classList.toggle('active', l === lang));
+  renderGallery();
+}
+
+currentLang = detectLang();
+loadGalleryJson();
+showLang(currentLang);
+
+window.addEventListener('scroll', () => {
+  document.getElementById('site-header').classList.toggle('scrolled', window.scrollY > 60);
+});
+</script>
+</body>
+</html>
