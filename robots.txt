@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://zwenn.es/sitemap.xml
+Sitemap: https://carmenes.nl/sitemap.xml
