@@ -1,6 +1,6 @@
 # Tips & Activities invullen (tips.html)
 
-`tips.html` toont een Leaflet-kaart met POI's (points of interest) rond Los Carmenes,
+`tips.html` toont een Leaflet-kaart met POI's (points of interest) rond Las Carmenes,
 gegroepeerd per categorie in de zijbalk. Alle content komt uit één bestand:
 [`tips.json`](tips.json). Er is geen build-stap nodig — bewerk het bestand en commit.
 
@@ -55,7 +55,7 @@ anders verschijnt de rauwe sleutel als label.
 - Rechtsklik op de locatie in [openstreetmap.org](https://www.openstreetmap.org) →
   "Show address" geeft lat/lng direct in de URL.
   Of gebruik Google Maps: rechtsklik op de locatie → de coördinaten staan bovenaan het menu.
-- De kaart in `tips.html` is gecentreerd op `[36.714516, -4.300670]` (Los Carmenes zelf) —
+- De kaart in `tips.html` is gecentreerd op `[36.714516, -4.300670]` (Las Carmenes zelf) —
   dat hoef je niet aan te passen tenzij het huis verhuist.
 
 ## Na het invullen van echte data
